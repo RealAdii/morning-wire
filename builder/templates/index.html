@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Wire — {{ date_str }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #f6f6ef;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 10pt;
+            color: #333;
+        }
+
+        .header {
+            background: #ff6600;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #000;
+            font-size: 13pt;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .header .date {
+            color: #000;
+            font-size: 9pt;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 85%;
+            margin: 0 auto;
+            padding: 16px 0;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            background: #ff6600;
+            color: #000;
+            padding: 4px 8px;
+            font-size: 9pt;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        /* News items */
+        .news-item {
+            padding: 4px 0;
+            line-height: 1.5;
+        }
+
+        .news-item .rank {
+            color: #828282;
+            display: inline;
+            min-width: 24px;
+            font-size: 10pt;
+        }
+
+        .news-item .title a {
+            color: #000;
+            text-decoration: none;
+            font-size: 10pt;
+        }
+
+        .news-item .title a:visited {
+            color: #828282;
+        }
+
+        .news-item .title a:hover {
+            text-decoration: underline;
+        }
+
+        .news-item .source {
+            color: #828282;
+            font-size: 8pt;
+            margin-left: 4px;
+        }
+
+        .news-item .summary {
+            color: #666;
+            font-size: 8pt;
+            padding-left: 28px;
+            margin-top: 2px;
+        }
+
+        .signal-badge {
+            font-size: 7pt;
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 2px;
+            margin-left: 4px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .signal-HIGH {
+            background: #ff0000;
+            color: #fff;
+        }
+
+        .signal-MEDIUM {
+            background: #ff6600;
+            color: #fff;
+        }
+
+        .signal-LOW {
+            background: #828282;
+            color: #fff;
+        }
+
+        /* YC Cards */
+        .yc-card {
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .yc-card .company-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .yc-card .company-name {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .yc-card .company-name:hover {
+            text-decoration: underline;
+        }
+
+        .yc-card .batch-badge {
+            background: #ff6600;
+            color: #fff;
+            font-size: 7pt;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        .yc-card .tag {
+            background: #f0f0f0;
+            color: #666;
+            font-size: 7pt;
+            padding: 1px 4px;
+            border-radius: 2px;
+            margin-left: 2px;
+        }
+
+        .yc-card .memo-section {
+            margin: 4px 0;
+            font-size: 9pt;
+            line-height: 1.4;
+        }
+
+        .yc-card .memo-label {
+            color: #ff6600;
+            font-weight: bold;
+            font-size: 8pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .yc-card .memo-text {
+            color: #444;
+            margin-left: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid #ff6600;
+            padding: 8px 0;
+            margin-top: 16px;
+            text-align: center;
+            color: #828282;
+            font-size: 8pt;
+        }
+
+        .footer a {
+            color: #828282;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 95%;
+                padding: 8px;
+            }
+
+            .news-item .summary {
+                padding-left: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><a href="/">&#x26A1; Morning Wire</a></h1>
+        <span class="date">{{ date_str }}</span>
+    </div>
+
+    <div class="container">
+        <!-- TOP AI SIGNAL -->
+        <div class="section">
+            <div class="section-header">TOP AI SIGNAL</div>
+            {% for item in ai_signal %}
+            <div class="news-item">
+                <span class="rank">{{ loop.index }}.</span>
+                <span class="title">
+                    <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+                </span>
+                <span class="source">({{ item.source }})</span>
+                <span class="signal-badge signal-{{ item.signal | default('MEDIUM') }}">{{ item.signal | default('MEDIUM') }}</span>
+                {% if item.summary %}
+                <div class="summary">{{ item.summary }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% if not ai_signal %}
+            <div class="news-item"><span class="rank">—</span> No AI signal today.</div>
+            {% endif %}
+        </div>
+
+        <!-- YC DEAL FLOW -->
+        <div class="section">
+            <div class="section-header">YC DEAL FLOW</div>
+            {% for company in yc_companies %}
+            <div class="yc-card">
+                <div class="company-header">
+                    <a href="{{ company.url }}" target="_blank" rel="noopener" class="company-name">{{ company.name }}</a>
+                    <span class="batch-badge">{{ company.batch }}</span>
+                    <span class="signal-badge signal-{{ company.signal | default('MEDIUM') }}">{{ company.signal | default('MEDIUM') }}</span>
+                    {% for tag in company.tags[:3] %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <div class="memo-section">
+                    <span class="memo-label">Problem:</span>
+                    <span class="memo-text">{{ company.problem | default('N/A') }}</span>
+                </div>
+                <div class="memo-section">
+                    <span class="memo-label">Solution:</span>
+                    <span class="memo-text">{{ company.solution | default('N/A') }}</span>
+                </div>
+                <div class="memo-section">
+                    <span class="memo-label">Market:</span>
+                    <span class="memo-text">{{ company.market | default('N/A') }}</span>
+                </div>
+                <div class="memo-section">
+                    <span class="memo-label">Why Now:</span>
+                    <span class="memo-text">{{ company.why_now | default('N/A') }}</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not yc_companies %}
+            <div class="news-item"><span class="rank">—</span> No YC companies featured today.</div>
+            {% endif %}
+        </div>
+
+        <!-- MARKET WIRE -->
+        <div class="section">
+            <div class="section-header">MARKET WIRE</div>
+            {% for item in market_wire %}
+            <div class="news-item">
+                <span class="rank">{{ loop.index }}.</span>
+                <span class="title">
+                    <a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+                </span>
+                <span class="source">({{ item.source }})</span>
+                <span class="signal-badge signal-{{ item.signal | default('MEDIUM') }}">{{ item.signal | default('MEDIUM') }}</span>
+                {% if item.summary %}
+                <div class="summary">{{ item.summary }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% if not market_wire %}
+            <div class="news-item"><span class="rank">—</span> No market wire today.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="footer">
+        Generated {{ timestamp }} &middot; Powered by Gemini &middot;
+        <a href="archive/">Archive</a>
+    </div>
+</body>
+</html>
